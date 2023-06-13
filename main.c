@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <errno.h>
 #include <string.h>
 
 #define NUM_ARGUMENTS 4
 
-int input_fd, output_fd;
+FILE* input_fd;
+FILE* output_fd;
 unsigned long char_counters[1 << 8];
 
 void print_usage(char* program_name) {
@@ -23,20 +22,20 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if ((input_fd = open(argv[2], O_RDONLY)) == -1) {
+    if ((input_fd = fopen(argv[2], "r")) == NULL) {
         printf("error opening input file \"%s\":\n\t%s\n",
                argv[2], strerror(errno));
         return 1;
     }
 
-    if ((output_fd = open(argv[3], O_WRONLY)) == -1) {
+    if ((output_fd = fopen(argv[3], "w")) == NULL) {
         printf("error opening output file \"%s\":\n\t%s\n",
                argv[3], strerror(errno));
-        close(input_fd);
+        fclose(input_fd);
         return 1;
     }
 
-    close(input_fd);
-    close(output_fd);
+    fclose(input_fd);
+    fclose(output_fd);
     return 0;
 }
