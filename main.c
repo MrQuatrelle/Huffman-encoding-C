@@ -1,6 +1,4 @@
 #include "main.h"
-#include <assert.h>
-#include <stdlib.h>
 
 FILE* input_fd;
 FILE* output_fd;
