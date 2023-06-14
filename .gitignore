@@ -54,3 +54,4 @@ dkms.conf
 .clang-format
 beta
 huffman
+tests
