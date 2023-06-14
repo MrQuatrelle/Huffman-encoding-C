@@ -14,6 +14,38 @@ void print_usage(char* program_name) {
            program_name);
 }
 
+// for debugging
+void print_heap(huff_node_t* head, int level) {
+    if (head->right)
+        print_heap(head->right, level + 1);
+
+    {
+        int i = 0;
+        while (i < level) {
+            printf("\t");
+            i++;
+        }
+    }
+
+    printf("(%c, %lu, ", head->byte, head->count);
+
+    { // priting the code in binary form
+        unsigned int mask = 1;
+        while (mask <= head->code)
+            mask <<= 1;
+        mask >>= 1;
+
+        while (mask) {
+            printf("%d", !!(head->code & mask));
+            mask >>= 1;
+        }
+    }
+
+    printf(")\n");
+    if (head->left)
+        print_heap(head->left, level + 1);
+}
+
 void sort_nodes(huff_node_t* node_array[], int length) {
     for (int i = 0; i < length - 1; i++) {
         if (!node_array[i])
@@ -28,25 +60,6 @@ void sort_nodes(huff_node_t* node_array[], int length) {
             }
         }
     }
-}
-
-// for debugging
-void print_heap(huff_node_t* head, int level) {
-    if (head->right)
-        print_heap(head->right, level + 1);
-
-    {
-        int i = 0;
-        while (i < level) {
-            printf("\t");
-            i++;
-        }
-    }
-
-    printf("(%c, %lu, %u)\n", head->byte, head->count, head->code);
-
-    if (head->left)
-        print_heap(head->left, level + 1);
 }
 
 void associate_codes_to_bytes(huff_node_t* head, unsigned int code) {
