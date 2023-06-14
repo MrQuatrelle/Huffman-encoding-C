@@ -43,23 +43,20 @@ void print_heap(huff_node_t* head, int level) {
         }
     }
 
-    printf("(%c, %lu, %d, %u)\n", head->byte, head->count, head->level,
-           head->code);
+    printf("(%c, %lu, %u)\n", head->byte, head->count, head->code);
 
     if (head->left)
         print_heap(head->left, level + 1);
 }
 
-void associate_codes_to_bytes(huff_node_t* head, char level,
-                              unsigned int code) {
-    head->level = level;
+void associate_codes_to_bytes(huff_node_t* head, unsigned int code) {
     head->code = code;
 
     if (head->left)
-        associate_codes_to_bytes(head->left, level + 1, code << 1);
+        associate_codes_to_bytes(head->left, code << 1);
 
     if (head->right)
-        associate_codes_to_bytes(head->right, level + 1, (code << 1) + 1);
+        associate_codes_to_bytes(head->right, (code << 1) + 1);
 }
 
 void build_heap(huff_node_t** heap, int length) {
@@ -78,7 +75,7 @@ void build_heap(huff_node_t** heap, int length) {
     } while (heap[1] != NULL); // while length > 1 (in the end there
                                // will only be the head of the heap in
                                // the list)
-    associate_codes_to_bytes(heap[0], 0, 0);
+    associate_codes_to_bytes(heap[0], 1);
     print_heap(heap[0], 0);
 
     byte_heap = heap[0];
