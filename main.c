@@ -137,7 +137,6 @@ __always_inline unsigned int get_code(int c, huff_node_t** key_stack) {
 
 void generate_compressed_content(huff_node_t** key_stack) {
     // TODO: how the hell am I going to save the encoding in the file???
-
     char c;
     char buffer = 0;
     char counter = 0;
