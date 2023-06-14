@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 FILE* input_fd;
 FILE* output_fd;
@@ -49,8 +50,8 @@ void print_heap(huff_node_t* head, int level) {
         print_heap(head->left, level + 1);
 }
 
-void
-associate_codes_to_bytes(huff_node_t* head, char level, unsigned int code) {
+void associate_codes_to_bytes(huff_node_t* head, char level,
+                              unsigned int code) {
     head->level = level;
     head->code = code;
 
@@ -64,12 +65,15 @@ associate_codes_to_bytes(huff_node_t* head, char level, unsigned int code) {
 void build_heap(huff_node_t** heap, int length) {
     do {
         sort_nodes(heap, length);
+
         huff_node_t* sum_node = malloc(sizeof(huff_node_t));
         assert(sum_node);
+
         sum_node->count = heap[0]->count + heap[1]->count;
         sum_node->left = heap[0];
         sum_node->right = heap[1];
         heap[1] = sum_node;
+
         heap++;
     } while (heap[1] != NULL); // while length > 1 (in the end there
                                // will only be the head of the heap in
@@ -132,6 +136,7 @@ int main(int argc, char* argv[]) {
     }
 
     prepare_nodes();
+    fseek(input_fd, 0, SEEK_SET);
 
     fclose(input_fd);
     fclose(output_fd);

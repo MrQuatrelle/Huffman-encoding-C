@@ -15,6 +15,9 @@ typedef struct huff_node {
     unsigned int code;
     // HACK: I don't see any other way of knowing how many bits there are
     // in the code...
+    // TODO: fuck this shit, gonna do this instead:
+    // e.g. for  the code 010, I'ma do 0b1010, first positive
+    // bit marks the beggining of the code
     unsigned int level;
     unsigned long count;
     struct huff_node* left;
