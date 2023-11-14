@@ -12,10 +12,10 @@
 
 typedef struct huff_node {
     char byte;
+    // NOTE: e.g. for the code 010, I'ma do 0b1010, first positive bit marks
+    // the beggining of the code. this helps knowing when I don't have any more
+    // bites to decrypt, in case the last byte of the file isn't filled.
     unsigned int code;
-    // TODO: fuck this shit, gonna do this instead:
-    // e.g. for  the code 010, I'ma do 0b1010, first positive
-    // bit marks the beggining of the code
     unsigned long count;
     struct huff_node* left;
     struct huff_node* right;

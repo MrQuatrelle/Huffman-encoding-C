@@ -8,7 +8,7 @@ FILE* output_fd;
 huff_node_t* byte_heap;
 int byte_heap_depth = 0;
 
-void print_usage(char* program_name) {
+__always_inline void print_usage(char* program_name) {
     printf("huffman usage:\n"
            "\t%s\t[SETTINGS]+\tinput_file\toutput_file\n\n"
            "SETTINGS:\n"
@@ -99,6 +99,17 @@ void build_heap(huff_node_t** heap, int length) {
     byte_heap = heap[0];
 }
 
+/*
+ * this function has the purpose of preparing the binary to encrypt the file,
+ * according to Huffman.
+ *
+ * it'll do a full pass on the file to count the amount of each, hence it needs
+ * to have the cursor at the beggining of the file.
+ * it'll also reset the cursor to the beggining of the file once it is done.
+ *
+ * then, it will form the binary tree-like structure that represents the
+ * encoding.
+ */
 huff_node_t** prepare_nodes() {
     huff_node_t** byte_nodes = malloc(sizeof(huff_node_t*) * BYTE_ARRAY_LENGTH);
     assert(byte_nodes);
@@ -116,6 +127,9 @@ huff_node_t** prepare_nodes() {
         byte_nodes[c]->count++;
     }
 
+    /*
+     * NOTE: this can probably be done in a better way...
+     */
     huff_node_t** buffer = malloc(sizeof(huff_node_t*) * unique_bytes);
     assert(buffer);
     int i = 0;
@@ -127,6 +141,10 @@ huff_node_t** prepare_nodes() {
 
     build_heap(buffer, unique_bytes);
     free(buffer);
+
+    /* !NOTE */
+
+    fseek(input_fd, 0, SEEK_SET);
 
     return byte_nodes;
 }
@@ -190,8 +208,6 @@ int main(int argc, char* argv[]) {
     }
 
     huff_node_t** key_stack = prepare_nodes();
-
-    fseek(input_fd, 0, SEEK_SET);
 
     generate_compressed_content(key_stack);
 
